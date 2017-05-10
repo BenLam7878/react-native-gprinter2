@@ -91,63 +91,6 @@ public class GPrinterModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void printTestPageClicked() {
-        try {
-            int rel = mGpService.printeTestPage(mPrinterIndex); //
-            Log.i("ServiceConnection", "rel " + rel);
-            ERROR_CODE r=ERROR_CODE.values()[rel];
-            if(r != ERROR_CODE.SUCCESS){
-                Toast.makeText(getReactApplicationContext(), "Message: "+GpCom.getErrorText(r),
-                                                  Toast.LENGTH_LONG).show();
-        }
-        } catch (RemoteException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-    }
-
-    @ReactMethod
-    public void getPrinterStatusClicked() {
-        try {
-            int status = mGpService.queryPrinterStatus(mPrinterIndex,500);
-            String str = new String();
-            if (status == GpCom.STATE_NO_ERR) {
-                str = "打印机正常";
-            } else if ((byte) (status & GpCom.STATE_OFFLINE) > 0) {
-                str = "打印机脱机";
-            } else if ((byte) (status & GpCom.STATE_PAPER_ERR) > 0) {
-                str = "打印机缺纸";
-            } else if ((byte) (status & GpCom.STATE_COVER_OPEN) > 0) {
-                str = "打印机开盖";
-            } else if ((byte) (status & GpCom.STATE_ERR_OCCURS) > 0) {
-                str = "打印机出错";
-            }
-            Toast.makeText(getReactApplicationContext(),  "打印机：" + '0' + " 状态：" + str,
-                                              Toast.LENGTH_LONG).show();
-        } catch (RemoteException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-    }
-
-    @ReactMethod
-    public void getPrinterCommandTypeClicked() {
-        try {
-            int type = mGpService.getPrinterCommandType(mPrinterIndex);
-            if (type == GpCom.ESC_COMMAND) {
-            Toast.makeText(getReactApplicationContext(),  "打印机使用ESC命令",
-                                                          Toast.LENGTH_LONG).show();
-            } else {
-            Toast.makeText(getReactApplicationContext(),  "打印机使用TSC命令",
-                                                                      Toast.LENGTH_LONG).show();
-            }
-        } catch (RemoteException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-    }
-
-    @ReactMethod
     public void printReceipt(final ReadableMap options, Callback callBack){
      if(!options.hasKey("address") || options.getString("address") == ""){
                     throw new IllegalArgumentException("Invalid params: address is required.");
@@ -420,6 +363,63 @@ public class GPrinterModule extends ReactContextBaseJavaModule {
 //                    Toast.makeText(getApplicationContext(),
 //                            "打印机错误！", Toast.LENGTH_SHORT).show();
 //                }
+//            }
+//        } catch (RemoteException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
+//    }
+
+//@ReactMethod
+//    public void printTestPageClicked() {
+//        try {
+//            int rel = mGpService.printeTestPage(mPrinterIndex); //
+//            Log.i("ServiceConnection", "rel " + rel);
+//            ERROR_CODE r=ERROR_CODE.values()[rel];
+//            if(r != ERROR_CODE.SUCCESS){
+//                Toast.makeText(getReactApplicationContext(), "Message: "+GpCom.getErrorText(r),
+//                                                  Toast.LENGTH_LONG).show();
+//        }
+//        } catch (RemoteException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
+//    }
+//
+//    @ReactMethod
+//    public void getPrinterStatusClicked() {
+//        try {
+//            int status = mGpService.queryPrinterStatus(mPrinterIndex,500);
+//            String str = new String();
+//            if (status == GpCom.STATE_NO_ERR) {
+//                str = "打印机正常";
+//            } else if ((byte) (status & GpCom.STATE_OFFLINE) > 0) {
+//                str = "打印机脱机";
+//            } else if ((byte) (status & GpCom.STATE_PAPER_ERR) > 0) {
+//                str = "打印机缺纸";
+//            } else if ((byte) (status & GpCom.STATE_COVER_OPEN) > 0) {
+//                str = "打印机开盖";
+//            } else if ((byte) (status & GpCom.STATE_ERR_OCCURS) > 0) {
+//                str = "打印机出错";
+//            }
+//            Toast.makeText(getReactApplicationContext(),  "打印机：" + '0' + " 状态：" + str,
+//                                              Toast.LENGTH_LONG).show();
+//        } catch (RemoteException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
+//    }
+//
+//    @ReactMethod
+//    public void getPrinterCommandTypeClicked() {
+//        try {
+//            int type = mGpService.getPrinterCommandType(mPrinterIndex);
+//            if (type == GpCom.ESC_COMMAND) {
+//            Toast.makeText(getReactApplicationContext(),  "打印机使用ESC命令",
+//                                                          Toast.LENGTH_LONG).show();
+//            } else {
+//            Toast.makeText(getReactApplicationContext(),  "打印机使用TSC命令",
+//                                                                      Toast.LENGTH_LONG).show();
 //            }
 //        } catch (RemoteException e1) {
 //            // TODO Auto-generated catch block
