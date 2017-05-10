@@ -1,0 +1,29 @@
+{
+  "name": "react-native-gprinter2",
+  "version": "0.2.0",
+  "description": "Gprinter for React Native version 2.0.",
+  "author": "Ben lam<ben_lam@happyclass.cn>",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "bugs": {
+    "url": ""
+  },
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "react-native",
+    "gprinter",
+    "蓝牙",
+    "佳博打印"
+  ],
+  "license": "",
+  "private": false,
+  "peerDependencies": {
+    "react-native": ">=0.42.3"
+  }
+}
