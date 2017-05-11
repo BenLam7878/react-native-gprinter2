@@ -292,8 +292,6 @@ public class GPrinterModule extends ReactContextBaseJavaModule {
                                                                             new Class[]{int.class}).invoke(selectDevice,1);
                             clientSocket.connect();
                         }catch(Exception e2){
-                            Toast.makeText(getReactApplicationContext(), "连接超时，请重启应用。",
-                                                                  Toast.LENGTH_LONG).show();
                              Log.e("", "Couldn't establish Bluetooth connection!");
                         }
                     }
