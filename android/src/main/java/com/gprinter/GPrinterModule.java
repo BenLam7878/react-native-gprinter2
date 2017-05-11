@@ -174,6 +174,10 @@ public class GPrinterModule extends ReactContextBaseJavaModule {
             int textPositionX = cssOptions.getInt("textPositionX");
             int textPositionY = cssOptions.getInt("textPositionY");
 
+            boolean sound = false;
+            if(options.hasKey("sound") && options.getBoolean("sound")){
+                sound = true;
+            }
             TscCommand tsc = new TscCommand();
             tsc.addSize(labelHeight, labelWidth); //设置标签尺寸，按照实际尺寸设置
             tsc.addGap(labelGap);           //设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0
@@ -203,7 +207,7 @@ public class GPrinterModule extends ReactContextBaseJavaModule {
 //          tsc.addBitmap(20,50, BITMAP_MODE.OVERWRITE, b.getWidth(),b);
 
             if(StringUtils.isNotBlank(qrCode)){
-                tsc.addQRCode(cssOptions.getInt("qrCodePositionX"), cssOptions.getInt("qrCodePositionY"), EEC.LEVEL_L,5,ROTATION.ROTATION_0, qrCode);
+                tsc.addQRCode(cssOptions.getInt("qrCodePositionX"), cssOptions.getInt("qrCodePositionY"), EEC.LEVEL_L,cssOptions.getInt("qrCodeWidth"),ROTATION.ROTATION_0, qrCode);
             }
             if(StringUtils.isNotBlank(barCode)){
                 //绘制一维条码
@@ -211,7 +215,9 @@ public class GPrinterModule extends ReactContextBaseJavaModule {
             }
 
             tsc.addPrint(1,1); // 打印标签
-            tsc.addSound(2, 100); //打印标签后 蜂鸣器响
+            if(sound){
+                tsc.addSound(2, 100); //打印标签后 蜂鸣器响
+            }
             Vector<Byte> datas = tsc.getCommand(); //发送数据
             Byte[] Bytes = datas.toArray(new Byte[datas.size()]);
             byte[] bytes = ArrayUtils.toPrimitive(Bytes);
@@ -286,6 +292,8 @@ public class GPrinterModule extends ReactContextBaseJavaModule {
                                                                             new Class[]{int.class}).invoke(selectDevice,1);
                             clientSocket.connect();
                         }catch(Exception e2){
+                            Toast.makeText(getReactApplicationContext(), "连接超时，请重启应用。",
+                                                                  Toast.LENGTH_LONG).show();
                              Log.e("", "Couldn't establish Bluetooth connection!");
                         }
                     }
@@ -330,100 +338,4 @@ public class GPrinterModule extends ReactContextBaseJavaModule {
               }
 
 
-// public void printReceiptClicked() {
-//        try {
-//            int type = mGpService.getPrinterCommandType(mPrinterIndex);
-//            if (type == GpCom.ESC_COMMAND) {
-//                int status = mGpService.queryPrinterStatus(mPrinterIndex,500);
-//                if (status == GpCom.STATE_NO_ERR) {
-//                    sendReceipt();
-//                }
-//                else{
-//                    Toast.makeText(getApplicationContext(),
-//                            "打印机错误！", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }
-//        catch (RemoteException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//    }
-//
-//
-//    public void printLabelClicked() {
-//        try {
-//            int type = mGpService.getPrinterCommandType(mPrinterIndex);
-//            if (type == GpCom.TSC_COMMAND) {
-//                int status = mGpService.queryPrinterStatus(mPrinterIndex,500);
-//                if (status ==GpCom.STATE_NO_ERR) {
-//                    sendLabel();
-//                }
-//                else{
-//                    Toast.makeText(getApplicationContext(),
-//                            "打印机错误！", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        } catch (RemoteException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//    }
-
-//@ReactMethod
-//    public void printTestPageClicked() {
-//        try {
-//            int rel = mGpService.printeTestPage(mPrinterIndex); //
-//            Log.i("ServiceConnection", "rel " + rel);
-//            ERROR_CODE r=ERROR_CODE.values()[rel];
-//            if(r != ERROR_CODE.SUCCESS){
-//                Toast.makeText(getReactApplicationContext(), "Message: "+GpCom.getErrorText(r),
-//                                                  Toast.LENGTH_LONG).show();
-//        }
-//        } catch (RemoteException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//    }
-//
-//    @ReactMethod
-//    public void getPrinterStatusClicked() {
-//        try {
-//            int status = mGpService.queryPrinterStatus(mPrinterIndex,500);
-//            String str = new String();
-//            if (status == GpCom.STATE_NO_ERR) {
-//                str = "打印机正常";
-//            } else if ((byte) (status & GpCom.STATE_OFFLINE) > 0) {
-//                str = "打印机脱机";
-//            } else if ((byte) (status & GpCom.STATE_PAPER_ERR) > 0) {
-//                str = "打印机缺纸";
-//            } else if ((byte) (status & GpCom.STATE_COVER_OPEN) > 0) {
-//                str = "打印机开盖";
-//            } else if ((byte) (status & GpCom.STATE_ERR_OCCURS) > 0) {
-//                str = "打印机出错";
-//            }
-//            Toast.makeText(getReactApplicationContext(),  "打印机：" + '0' + " 状态：" + str,
-//                                              Toast.LENGTH_LONG).show();
-//        } catch (RemoteException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//    }
-//
-//    @ReactMethod
-//    public void getPrinterCommandTypeClicked() {
-//        try {
-//            int type = mGpService.getPrinterCommandType(mPrinterIndex);
-//            if (type == GpCom.ESC_COMMAND) {
-//            Toast.makeText(getReactApplicationContext(),  "打印机使用ESC命令",
-//                                                          Toast.LENGTH_LONG).show();
-//            } else {
-//            Toast.makeText(getReactApplicationContext(),  "打印机使用TSC命令",
-//                                                                      Toast.LENGTH_LONG).show();
-//            }
-//        } catch (RemoteException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//    }
 }
