@@ -25,9 +25,9 @@ public class GPrinterPackage implements ReactPackage {
   @Override
   public List<NativeModule> createNativeModules(
                               ReactApplicationContext reactContext) {
-    List<NativeModule> modules = new ArrayList<>();
+    List<NativeModule> modules = new ArrayList<NativeModule>();
 
-    modules.add(new GPrinterModule(reactContext));
+    modules.add(new GPrinterModule2(reactContext));
 
     return modules;
   }
