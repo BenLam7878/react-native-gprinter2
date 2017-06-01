@@ -1,0 +1,5 @@
+rootProject.name = 'samples'
+include ':react-native-gprinter2'
+project(':react-native-gprinter2').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-gprinter2/android')
+
+include ':app'
