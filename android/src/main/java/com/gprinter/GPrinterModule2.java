@@ -295,7 +295,7 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
             sound = true;
         }
         TscCommand tsc = new TscCommand();
-        tsc.addSize(heigth, width); //设置标签尺寸，按照实际尺寸设置
+        tsc.addSize(width,heigth); //设置标签尺寸，按照实际尺寸设置
         tsc.addGap(gap);           //设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0
         tsc.addDirection(direction, mirror);//设置打印方向
         //设置原点坐标
