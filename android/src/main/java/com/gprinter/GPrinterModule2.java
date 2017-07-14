@@ -5,6 +5,8 @@ import android.os.*;
 import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import com.facebook.react.bridge.*;
 import com.gprinter.aidl.GpService;
 import com.gprinter.command.EscCommand;
@@ -274,14 +276,17 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
         }
         String address = options.getString("address");//蓝牙地址
         int width = options.getInt("width");
-        int heigth = options.getInt("height");
+        int height = options.getInt("height");
         int gap = options.hasKey("gap") ? options.getInt("gap") : 0;
+        TscCommand.SPEED speed = this.findSpeed(options.getInt("speed"));
         EscCommand.ENABLE tear = options.hasKey("tear") ?
                 options.getInt("tear") == EscCommand.ENABLE.ON.getValue() ? EscCommand.ENABLE.ON : EscCommand.ENABLE.OFF
                 : EscCommand.ENABLE.OFF;
         ReadableArray texts = options.getArray("text");
         ReadableArray qrCodes = options.getArray("qrcode");
         ReadableArray barCodes = options.getArray("barcode");
+        ReadableArray images = options.getArray("image");
+
         TscCommand.DIRECTION direction = options.hasKey("direction") ?
                 TscCommand.DIRECTION.BACKWARD.getValue() == options.getInt("direction") ? TscCommand.DIRECTION.BACKWARD : TscCommand.DIRECTION.FORWARD
                 : TscCommand.DIRECTION.FORWARD;
@@ -295,7 +300,10 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
             sound = true;
         }
         TscCommand tsc = new TscCommand();
-        tsc.addSize(width,heigth); //设置标签尺寸，按照实际尺寸设置
+        if(speed != null){
+            tsc.addSpeed(speed);
+        }
+        tsc.addSize(width,height); //设置标签尺寸，按照实际尺寸设置
         tsc.addGap(gap);           //设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0
         tsc.addDirection(direction, mirror);//设置打印方向
         //设置原点坐标
@@ -332,6 +340,20 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
 //          Bitmap b = BitmapFactory.decodeResource(getResources(),
 //            				R.drawable.gprinter);
 //          tsc.addBitmap(20,50, BITMAP_MODE.OVERWRITE, b.getWidth(),b);
+
+        if(images != null){
+            for (int i = 0; i < images.size(); i++) {
+                ReadableMap img = images.getMap(i);
+                int x = img.getInt("x");
+                int y = img.getInt("y");
+                int imgWidth = img.getInt("width");
+                TscCommand.BITMAP_MODE mode = this.findBitmapMode(img.getInt("mode"));
+                String image  = img.getString("image");
+                byte[] decoded = Base64.decode(image, Base64.DEFAULT);
+                Bitmap b = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
+                tsc.addBitmap(x,y, mode, imgWidth,b);
+            }
+        }
 
         if (qrCodes != null) {
             for (int i = 0; i < qrCodes.size(); i++) {
@@ -430,6 +452,35 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
         return ft;
     }
 
+    private TscCommand.BITMAP_MODE findBitmapMode(int mode){
+        TscCommand.BITMAP_MODE bm = TscCommand.BITMAP_MODE.OVERWRITE;
+        for (TscCommand.BITMAP_MODE m : TscCommand.BITMAP_MODE.values()) {
+            if (m.getValue() == mode) {
+                bm = m;
+                break;
+            }
+        }
+        return bm;
+    }
+
+    private TscCommand.SPEED findSpeed(int speed){
+        TscCommand.SPEED sd = null;
+        switch(speed){
+            case 1:
+                sd = TscCommand.SPEED.SPEED1DIV5;
+                break;
+            case 2:
+                sd = TscCommand.SPEED.SPEED2;
+                break;
+            case 3:
+                sd = TscCommand.SPEED.SPEED3;
+                break;
+            case 4:
+                sd = TscCommand.SPEED.SPEED4;
+                break;
+        }
+        return sd;
+    }
 
     @ReactMethod
     public void calibration(final String address, final Promise promise) {
