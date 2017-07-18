@@ -606,6 +606,11 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
                                     sendTscCommand(command, address, promise);
                                 }
                             } else {
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (Exception e) {
+                                    //ignore.
+                                }
                                 promise.resolve(null);
                             }
 
