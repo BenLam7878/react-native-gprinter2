@@ -139,6 +139,7 @@ const SAMPLE_LABEL_OPTIONS = {
         rotation: ROTATION.ROTATION_0,
         xscal:FONTMUL.MUL_1,
         yscal: FONTMUL.MUL_1,
+        bold:true
     }],
     qrcode: [{x: 300, y: 30, level: EEC.LEVEL_L, width: 3, rotation: ROTATION.ROTATION_0, code: 'show me the money'}],
     barcode: [{x: 160, y:150, type: BARCODETYPE.CODE128, height: 40, readabel: 1, rotation: ROTATION.ROTATION_0, code: '1234567890'}],

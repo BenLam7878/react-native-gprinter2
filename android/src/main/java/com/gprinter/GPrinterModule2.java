@@ -328,6 +328,7 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
             TscCommand.ROTATION rotation = this.findRotation(text.getInt("rotation"));
             TscCommand.FONTMUL xscal = this.findFontMul(text.getInt("xscal"));
             TscCommand.FONTMUL yscal = this.findFontMul(text.getInt("xscal"));
+            boolean bold = text.hasKey("bold") && text.getBoolean("bold");
 
             try {
                 byte[] temp = t.getBytes("UTF-8");
@@ -341,6 +342,7 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
             tsc.addText(x, y, fonttype/*字体类型*/,
                     rotation/*旋转角度*/, xscal/*横向放大*/, yscal/*纵向放大*/, t);
 
+            if(bold){
                 tsc.addText(x-1, y, fonttype,
                         rotation, xscal, yscal, t/*这里的t可能需要替换成同等长度的空格*/);
                 tsc.addText(x+1, y, fonttype,
