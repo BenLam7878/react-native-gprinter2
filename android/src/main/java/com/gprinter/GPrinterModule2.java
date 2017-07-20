@@ -278,7 +278,7 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
         int width = options.getInt("width");
         int height = options.getInt("height");
         int gap = options.hasKey("gap") ? options.getInt("gap") : 0;
-        TscCommand.SPEED speed = this.findSpeed(options.getInt("speed"));
+        TscCommand.SPEED speed = options.hasKey("speed")?this.findSpeed(options.getInt("speed")):null;
         EscCommand.ENABLE tear = options.hasKey("tear") ?
                 options.getInt("tear") == EscCommand.ENABLE.ON.getValue() ? EscCommand.ENABLE.ON : EscCommand.ENABLE.OFF
                 : EscCommand.ENABLE.OFF;
@@ -293,6 +293,7 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
         TscCommand.MIRROR mirror = options.hasKey("mirror") ?
                 TscCommand.MIRROR.MIRROR.getValue() == options.getInt("mirror") ? TscCommand.MIRROR.MIRROR : TscCommand.MIRROR.NORMAL
                 : TscCommand.MIRROR.NORMAL;
+        TscCommand.DENSITY density = options.hasKey("density")?this.findDensity(options.getInt("density")):null;
         ReadableArray reference = options.getArray("reference");
 
         boolean sound = false;
@@ -301,7 +302,10 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
         }
         TscCommand tsc = new TscCommand();
         if(speed != null){
-            tsc.addSpeed(speed);
+            tsc.addSpeed(speed);//设置打印速度
+        }
+        if(density != null){
+            tsc.addDensity(density);//设置打印浓度
         }
         tsc.addSize(width,height); //设置标签尺寸，按照实际尺寸设置
         tsc.addGap(gap);           //设置标签间隙，按照实际尺寸设置，如果为无间隙纸则设置为0
@@ -324,6 +328,7 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
             TscCommand.ROTATION rotation = this.findRotation(text.getInt("rotation"));
             TscCommand.FONTMUL xscal = this.findFontMul(text.getInt("xscal"));
             TscCommand.FONTMUL yscal = this.findFontMul(text.getInt("xscal"));
+
             try {
                 byte[] temp = t.getBytes("UTF-8");
                 String temStr = new String(temp, "UTF-8");
@@ -332,8 +337,19 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
                 promise.reject("INVALID_TEXT", e);
                 return;
             }
+
             tsc.addText(x, y, fonttype/*字体类型*/,
                     rotation/*旋转角度*/, xscal/*横向放大*/, yscal/*纵向放大*/, t);
+
+                tsc.addText(x-1, y, fonttype,
+                        rotation, xscal, yscal, t/*这里的t可能需要替换成同等长度的空格*/);
+                tsc.addText(x+1, y, fonttype,
+                        rotation, xscal, yscal, t/*这里的t可能需要替换成同等长度的空格*/);
+                tsc.addText(x, y-1, fonttype,
+                        rotation, xscal, yscal, t/*这里的t可能需要替换成同等长度的空格*/);
+                tsc.addText(x, y+1, fonttype,
+                        rotation, xscal, yscal, t/*这里的t可能需要替换成同等长度的空格*/);
+            }
         }
 
         //绘制图片
@@ -480,6 +496,17 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
                 break;
         }
         return sd;
+    }
+
+    private TscCommand.DENSITY findDensity(int density){
+        TscCommand.DENSITY ds = null;
+        for (TscCommand.DENSITY d : TscCommand.DENSITY.values()) {
+            if (d.getValue() == density) {
+                ds = d;
+                break;
+            }
+        }
+        return ds;
     }
 
     @ReactMethod

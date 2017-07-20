@@ -116,6 +116,7 @@ const SAMPLE_LABEL_OPTIONS = {
     height: 50,
     gap: 30,
     direction: DIRECTION.FORWARD,
+    density:DENSITY.DNESITY3,
     mirror: MIRROR.NORMAL,
     speed:PRINT_SPEED.SPEED1DIV5,
     reference: [0, 0],
@@ -137,7 +138,7 @@ const SAMPLE_LABEL_OPTIONS = {
         fonttype: FONTTYPE.SIMPLIFIED_CHINESE,
         rotation: ROTATION.ROTATION_0,
         xscal:FONTMUL.MUL_1,
-        yscal: FONTMUL.MUL_1
+        yscal: FONTMUL.MUL_1,
     }],
     qrcode: [{x: 300, y: 30, level: EEC.LEVEL_L, width: 3, rotation: ROTATION.ROTATION_0, code: 'show me the money'}],
     barcode: [{x: 160, y:150, type: BARCODETYPE.CODE128, height: 40, readabel: 1, rotation: ROTATION.ROTATION_0, code: '1234567890'}],
