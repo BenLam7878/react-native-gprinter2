@@ -286,6 +286,7 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
         ReadableArray qrCodes = options.getArray("qrcode");
         ReadableArray barCodes = options.getArray("barcode");
         ReadableArray images = options.getArray("image");
+        ReadableArray reverses = options.getArray("reverse");
 
         TscCommand.DIRECTION direction = options.hasKey("direction") ?
                 TscCommand.DIRECTION.BACKWARD.getValue() == options.getInt("direction") ? TscCommand.DIRECTION.BACKWARD : TscCommand.DIRECTION.FORWARD
@@ -352,11 +353,6 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
                 tsc.addText(x, y+1, fonttype,
                         rotation, xscal, yscal, t/*这里的t可能需要替换成同等长度的空格*/);
             }
-            try {
-                Thread.sleep(100);
-            } catch (Exception e) {
-                //ignore.
-            }
         }
 
         //绘制图片
@@ -375,11 +371,6 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
                 byte[] decoded = Base64.decode(image, Base64.DEFAULT);
                 Bitmap b = BitmapFactory.decodeByteArray(decoded, 0, decoded.length);
                 tsc.addBitmap(x,y, mode, imgWidth,b);
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    //ignore.
-                }
             }
         }
 
@@ -393,11 +384,6 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
                 TscCommand.ROTATION rotation = this.findRotation(qr.getInt("rotation"));
                 String code = qr.getString("code");
                 tsc.addQRCode(x, y, level, qrWidth, rotation, code);
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    //ignore.
-                }
             }
         }
         if (barCodes != null) {
@@ -411,11 +397,17 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
                 TscCommand.BARCODETYPE type = this.findBarcodeType(bar.getString("type"));
                 TscCommand.READABEL readabel = this.findReadabel(bar.getInt("readabel"));
                 tsc.add1DBarcode(x, y, type, barHeight, readabel, rotation, code);
-                try {
-                    Thread.sleep(500);
-                } catch (Exception e) {
-                    //ignore.
-                }
+            }
+        }
+
+        if(reverses != null){
+            for(int i=0; i < reverses.size(); i++){
+                ReadableMap area = reverses.getMap(i);
+                int ax = area.getInt("x");
+                int ay = area.getInt("y");
+                int aWidth = area.getInt("width");
+                int aHeight = area.getInt("height");
+                tsc.addReverse(ax,ay,aWidth,aHeight);
             }
         }
 
@@ -655,7 +647,7 @@ public class GPrinterModule2 extends ReactContextBaseJavaModule {
                                 }
                             } else {
                                 try {
-                                    Thread.sleep(2000);
+                                    Thread.sleep(1000);
                                 } catch (Exception e) {
                                     //ignore.
                                 }
