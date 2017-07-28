@@ -123,7 +123,7 @@ const SAMPLE_LABEL_OPTIONS = {
     tear: 0,
     sound: 0,
     address: "DC:0D:30:04:33:69",
-    reverse:[{0,0,0,0}],
+    reverse:[{x:0,y:0,width:0,height:0}],
     text: [{
         text: 'I am a testing txt',
         x: 20,
